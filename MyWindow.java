@@ -1,4 +1,7 @@
+
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,7 +16,7 @@ import javax.swing.*;
  * Java class called MyWindow that extends JFrame. 
  * Displays a graphical user interface. It has three panels added to the JFrame i.e. MyWindow. 
  * The components added to these panels are JLabels, JTextFields and JButtons.
- * @author Troy Proffitt, Darcy Hayes
+ * @author Troy Proffitt, Darcy Hayes, Anna Martin
  */
 public class MyWindow extends JFrame {
 	
@@ -35,9 +38,9 @@ public class MyWindow extends JFrame {
 		JPanel searchPanel = new JPanel();
 		JScrollPane scrollPane = new JScrollPane(result);
 		
-		searchPanel.add(searching);
-		searchPanel.add(searchB);
-		searchPanel.add(scrollPane);
+		searchPanel.add(searching, BorderLayout.NORTH);
+		searchPanel.add(searchB, BorderLayout.NORTH);
+		searchPanel.add(scrollPane, BorderLayout.SOUTH);
 		
 		
 		// title
@@ -57,6 +60,7 @@ public class MyWindow extends JFrame {
 		
 		JTextField enterUser = new JTextField("Enter your username");
 		JTextField enterPass = new JTextField("Enter your password");
+		account.setLayout(new GridLayout(2, 2));
 		account.add(userName);
 		account.add(password);
 		account.add(enterUser);
@@ -71,9 +75,23 @@ public class MyWindow extends JFrame {
 	
 	public static void main(String[] args) {
 		MyWindow window = new MyWindow();
-		window.setTitle("Course Project");
+		window.setTitle("APPStack");
 		window.setSize(800, 600);
 		window.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		window.setVisible(true);
+		
+		/*
+		 * Next step is to implement a database and add applications.
+		 * After these steps, the search bar can be made functional
+		 * and the add details task can be completed.
+		 * 
+		 * example of potential use of mongo db:
+		 * MongoClient mongoClient = MongoClients.create("mongodb+srv://<anna>:<abcd1234>@cluster0.yrcpl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+		 * DB database = mongoClient.getDB("AppStack");
+		 * DBCollection collection = database.getCollection("AppInformation");
+		 * 
+		 * - needs certain dependencies to function, running into errors - Anna
+		 */
+		
 	}
 }
