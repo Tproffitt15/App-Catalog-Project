@@ -16,7 +16,7 @@ import javax.swing.*;
  * Java class called MyWindow that extends JFrame. 
  * Displays a graphical user interface. It has three panels added to the JFrame i.e. MyWindow. 
  * The components added to these panels are JLabels, JTextFields and JButtons.
- * @author Troy Proffitt, Darcy Hayes, Anna Martin
+ * @author Troy Proffitt, Darcy Hayes, Anna Martin, Clark Seese
  */
 public class MyWindow extends JFrame {
 	
@@ -36,11 +36,13 @@ public class MyWindow extends JFrame {
 		JButton searchB = new JButton("Search");
 		JTable result = new JTable();
 		JPanel searchPanel = new JPanel();
+		JScrollBar scrollBar = new JScrollBar();
 		JScrollPane scrollPane = new JScrollPane(result);
 		
 		searchPanel.add(searching, BorderLayout.NORTH);
 		searchPanel.add(searchB, BorderLayout.NORTH);
 		searchPanel.add(scrollPane, BorderLayout.SOUTH);
+		searchPanel.add(scrollBar);
 		
 		
 		// title
