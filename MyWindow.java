@@ -39,7 +39,7 @@ public class MyWindow extends JFrame {
 		String appFile = new String("AppStackApps.txt");
 		
 		// Search box
-		JTextArea result = new JTextArea(10, 20);
+		JTextArea result = new JTextArea(30, 50);
 		result.setEditable(false);
 		
 		JPanel searchPanel = new JPanel();
@@ -53,10 +53,21 @@ public class MyWindow extends JFrame {
              @Override
              public void actionPerformed(ActionEvent e) {
             	 try {
+            		 // sets text area empty once a search is made
+            		 result.setText("");
+            		 
+            		 // takes search word from the search bar
+            		 String searchMade = searching.getText().toLowerCase();
+            		 
+            		 // creates a new scanner from the text file of apps
          			Scanner fin = new Scanner(new File(appFile));
          			
          			while(fin.hasNext()) {
-         				result.append(fin.nextLine() + "\n");
+         				// performs a search using the search word in the search bar
+         				String currentLine = fin.nextLine();
+         				if (currentLine.toLowerCase().contains(searchMade)) {
+         						result.append(currentLine + "\n");
+         				}
          			}
          		} catch (Exception f) {
          			f.printStackTrace();
@@ -94,7 +105,7 @@ public class MyWindow extends JFrame {
 		account.add(enterUser);
 		account.add(enterPass);
 		
-		add(panel);
+		//add(panel);
 		
 		add(panel, BorderLayout.NORTH);
 		add(searchPanel, BorderLayout.SOUTH);
@@ -108,18 +119,6 @@ public class MyWindow extends JFrame {
 		window.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		window.setVisible(true);
 		
-		/*
-		 * Next step is to implement a database and add applications.
-		 * After these steps, the search bar can be made functional
-		 * and the add details task can be completed.
-		 * 
-		 * example of potential use of mongo db:
-		 * MongoClient mongoClient = MongoClients.create("mongodb+srv://<anna>:<abcd1234>@cluster0.yrcpl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
-		 * DB database = mongoClient.getDB("AppStack");
-		 * DBCollection collection = database.getCollection("AppInformation");
-		 * 
-		 * - needs certain dependencies to function, running into errors - Anna
-		 */
 		
 	}
 }
