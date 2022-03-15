@@ -1,6 +1,9 @@
-
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,20 +27,43 @@ public class MyWindow extends JFrame {
 		JPanel panel = new JPanel();
 		
 		JPanel title = new JPanel();
+		
+		
 		JPanel account = new JPanel();
 		JPanel buttons = new JPanel();
 		panel.add(title);
 		panel.add(account);
 		panel.add(buttons);
 		
+		// Reading from file
+		String appFile = new String("AppStackApps.txt");
 		
 		// Search box
-		JTextField searching = new JTextField(30);
-		JButton searchB = new JButton("Search");
-		JTable result = new JTable();
+		JTextArea result = new JTextArea(10, 20);
+		result.setEditable(false);
+		
 		JPanel searchPanel = new JPanel();
 		JScrollBar scrollBar = new JScrollBar();
 		JScrollPane scrollPane = new JScrollPane(result);
+		JTextField searching = new JTextField(30);
+		
+		JButton searchB = new JButton("Search");
+		// Displaying apps upon searching, rough draft
+		searchB.addActionListener(new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+            	 try {
+         			Scanner fin = new Scanner(new File(appFile));
+         			
+         			while(fin.hasNext()) {
+         				result.append(fin.nextLine() + "\n");
+         			}
+         		} catch (Exception f) {
+         			f.printStackTrace();
+         		}
+             }
+         });
+	
 		
 		searchPanel.add(searching, BorderLayout.NORTH);
 		searchPanel.add(searchB, BorderLayout.NORTH);
