@@ -1,2 +1,4 @@
-App 1: Facebook
-App 2: This is a new app
+1,Facebook,online social networking website,Facebook,cross-platform,357.0,https://www.apple.com/app-store/,0.0
+2,This is a new app,app description, organization name,platform type,1.0,https://www.apple.com/app-store/,0.0
+3,Snapchat,mobile messaging application used to share photos,Snap Inc,cross-platform,11.70.0.37,https://www.apple.com/app-store/,0.0
+4,Instagram,free photo and video sharing app,Instagram Inc.,cross-platform,226.0,https://www.apple.com/app-store/,0.0
