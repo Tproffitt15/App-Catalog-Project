@@ -66,7 +66,14 @@ public class MyWindow extends JFrame {
          				// performs a search using the search word in the search bar
          				String currentLine = fin.nextLine();
          				if (currentLine.toLowerCase().contains(searchMade)) {
-         						result.append(currentLine + "\n");
+         						String[] arr = currentLine.split(",");
+         							result.append("App: " + arr[0] + "\n");
+         							result.append("Description: " + arr[1] + "\n");
+         							result.append("Publisher: " + arr[2] + "\n");
+         							result.append("Platform: " + arr[3] + "\n");
+         							result.append("Version: " + arr[4] + "\n");
+         							result.append("Link: " + arr[5] + "\n");
+         							result.append("Price: $" + arr[6] + "\n ---------- \n");
          				}
          			}
          		} catch (Exception f) {
