@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -24,6 +25,7 @@ public class AppStackPanel extends JPanel {
 	// Panels
 	JPanel cards;
 	JPanel loginPanel;
+	JPanel createAccPanel;
 	JPanel searchPanel;
 	
 	// Layout
@@ -33,11 +35,15 @@ public class AppStackPanel extends JPanel {
 	JButton logBtn;
 	JButton forgotBtn;
 	JButton searchB;
+	JButton createBtn;
+	JButton alreadyBtn;
 	
 	// Text fields
 	JTextField username;
     JTextField password;
     JTextField searching;
+    JTextField newUsername;
+    JTextField newPassword;
     
     // Strings 
     String appFile;
@@ -50,6 +56,8 @@ public class AppStackPanel extends JPanel {
     
     // Scanners
     Scanner fin;
+    PrintWriter pw;
+    FileWriter fw;
     
     // JTextAreas
     JTextArea result;
@@ -62,19 +70,69 @@ public class AppStackPanel extends JPanel {
 		cards = new JPanel();
 		cards.setLayout(cardLayout = new CardLayout());
 		
+		// Create account page
+		createAccPanel = new JPanel();
+		createAccPanel.setSize(AppStackFrame.SCREEN_WIDTH, AppStackFrame.SCREEN_HEIGHT);
+		createAccPanel.setBackground(Color.LIGHT_GRAY);
+		// Username
+		JLabel newUser = new JLabel("Username");
+		createAccPanel.add(newUser);
+		newUsername = new JTextField(10);
+		createAccPanel.add(newUsername);
+        
+        // Password
+		JLabel newPass = new JLabel("Password");
+		newPassword = new JTextField(10);
+        createAccPanel.add(newPass);
+        createAccPanel.add(newPassword);
+        
+        // Buttons
+		createBtn = new JButton("Create account");
+		createAccPanel.add(createBtn, new GridBagConstraints());
+		alreadyBtn = new JButton("Already have an account?");
+		createAccPanel.add(alreadyBtn);
+
+        
+        createBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	userCheck = newUsername.getText();
+            	passCheck = newPassword.getText();
+                if (createAccount(userCheck, passCheck)) {
+                	cardLayout.show(cards, "Login");
+                }
+            }
+        });
+        
+        alreadyBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cards, "Login");
+            }
+        });
+        
+		
 		// Login Page
 		loginPanel = new JPanel();
 		loginPanel.setSize(AppStackFrame.SCREEN_WIDTH, AppStackFrame.SCREEN_HEIGHT);
 		
+		// Username
+		JLabel userLabel = new JLabel("Username");
+		loginPanel.add(userLabel);
+		username = new JTextField(10);
+        loginPanel.add(username);
+        
+        // Password
+		JLabel passLabel = new JLabel("Password");
+        password = new JTextField(10);
+		loginPanel.add(passLabel);
+        loginPanel.add(password);
+        
+        // Buttons
 		logBtn = new JButton("Login");
 		forgotBtn = new JButton("Forgot username/password");
 		loginPanel.add(logBtn, new GridBagConstraints());
 		loginPanel.add(forgotBtn);
-		
-		username = new JTextField(10);
-        password = new JTextField(10);
-        loginPanel.add(username);
-        loginPanel.add(password);
         
         logBtn.addActionListener(new ActionListener() {
             @Override
@@ -149,12 +207,43 @@ public class AppStackPanel extends JPanel {
 		searchPanel.add(scrollBar);
 		
 		// Adding pages
+		cards.add(createAccPanel, "Create Account");
 		cards.add(loginPanel, "Login");
 		cards.add(searchPanel, "Search");
 		
 		this.add(cards);
 		 
 	}
+	
+	public boolean createAccount(String user, String pass) {
+    	try {    		
+    		loginFile = "Logins.txt";
+    		
+    		fin = new Scanner(new File(loginFile));
+    		
+    		// Setting to lowercase for clarity
+    		user.toLowerCase();
+    		pass.toLowerCase();
+    		while(fin.hasNext()) {
+    		 	// performs a search using the search word in the search bar
+    		 	currentLine = fin.nextLine();
+    		 	arr = currentLine.split(",");
+    		 	if (arr[0].equals(user) && arr[1].equals(pass)) {
+    		 		return false;
+    		 	}
+    		 				
+    		}
+    		
+    		fw = new FileWriter(loginFile, true);
+			fw.write("\n" + user + "," + pass + "," + "user");
+			fw.close();
+    		
+    	} catch (Exception f) {
+ 			f.printStackTrace();
+ 		}
+    	
+    	return true;
+    }
 	
 	public boolean confirmLogin(String user, String pass) {
     	try {
