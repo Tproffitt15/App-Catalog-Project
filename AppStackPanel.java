@@ -7,10 +7,16 @@ import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.*;
+import java.util.regex.PatternSyntaxException;
+
 import javax.swing.border.Border;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 
 /**
  * Java class called AppStackPanel that extends JPanel. 
@@ -65,6 +71,9 @@ public class AppStackPanel extends JPanel {
     // JScrollBar + JScrollPane
     JScrollBar scrollBar;
     JScrollPane scrollPane;
+    
+    int [] rowIndex;
+    int [] colIndex;
 	
 	public AppStackPanel() {
 		cards = new JPanel();
@@ -165,46 +174,105 @@ public class AppStackPanel extends JPanel {
 		scrollPane = new JScrollPane(result);
 		searching = new JTextField(30);
 		
+		JTable searchTable = new JTable();
+		
 		searchB = new JButton("Search");
-		// Displaying apps upon searching, rough draft
+
+		InsertFileDataToJTable model = new InsertFileDataToJTable();
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+		JTable table = new JTable(model);
+		table.setRowSorter(sorter);
+		table.getColumnModel().getColumn(0).setHeaderValue("App");
+		table.getColumnModel().getColumn(1).setHeaderValue("Desc");
+		table.getColumnModel().getColumn(2).setHeaderValue("Publisher");
+		table.getColumnModel().getColumn(3).setHeaderValue("Platform");
+		table.getColumnModel().getColumn(4).setHeaderValue("Version");
+		table.getColumnModel().getColumn(5).setHeaderValue("Link");
+		table.getColumnModel().getColumn(6).setHeaderValue("Price");
+		
+
 		searchB.addActionListener(new ActionListener() {
              @Override
              public void actionPerformed(ActionEvent e) {
             	 try {	
-            		 // sets text area empty once a search is made
-            		 result.setText("");
             		 
-            		 // takes search word from the search bar
-            		 searchMade = searching.getText().toLowerCase();
-            		 
-            		 // creates a new scanner from the text file of apps
-         			 fin = new Scanner(new File(appFile));
-         			
-         			 while(fin.hasNext()) {
-         				// performs a search using the search word in the search bar
-         				currentLine = fin.nextLine();
-         				if (currentLine.toLowerCase().contains(searchMade)) {
-         						arr = currentLine.split(",");
-         							result.append("App: " + arr[0] + "\n");
-         							result.append("Description: " + arr[1] + "\n");
-         							result.append("Publisher: " + arr[2] + "\n");
-         							result.append("Platform: " + arr[3] + "\n");
-         							result.append("Version: " + arr[4] + "\n");
-         							result.append("Link: " + arr[5] + "\n");
-         							result.append("Price: $" + arr[6] + "\n------------- \n");
-         				}
-         			}
+            		searchMade = searching.getText().trim();
+            		
+            		if (searchMade.length() != 0) {
+            			searchMade = searchMade.substring(0, 1).toUpperCase() + searchMade.substring(1);
+            			searchMade = searchMade.substring(1, searchMade.length()).toLowerCase();
+            		}	
+            			
+            		RowFilter<TableModel, Object> rf = null;
+            	    //If current expression doesn't parse, don't update.
+            	    try {
+            	        rf = RowFilter.regexFilter(searchMade, 0);
+            	    } catch (java.util.regex.PatternSyntaxException f) {
+            	    	
+            	        return;
+            	    }
+            	    sorter.setRowFilter(rf);
+     	            sorter.setRowFilter(RowFilter.regexFilter(searchMade));
+
+            		
          		} catch (Exception f) {
          			f.printStackTrace();
          		}
              }
          });
+		
+		rowIndex = table.getSelectedRows();
+        colIndex = table.getSelectedColumns();
 	
 		
-		searchPanel.add(searching, BorderLayout.NORTH);
-		searchPanel.add(searchB, BorderLayout.NORTH);
-		searchPanel.add(scrollPane, BorderLayout.SOUTH);
-		searchPanel.add(scrollBar);
+		JButton displayReview = new JButton("Reviews");
+		displayReview.setMnemonic(KeyEvent.VK_C);
+	    displayReview.addActionListener(new ActionListener() {
+	    	public void actionPerformed(java.awt.event.ActionEvent evt) {
+	    		int[] selectedRows= table.getSelectedRows();
+	    		int[] selectedColumns = table.getSelectedColumns();
+	    		String reviewText = "";
+	    		String reviewsName = (table.getValueAt(selectedRows[0], 0)) + "Reviews.txt";
+	    		try {
+	    			fin = new Scanner(new File(reviewsName));
+	    			while(fin.hasNext()) {
+         				currentLine = fin.nextLine();
+         				arr = currentLine.split("//");
+         				for (int i = 0; i < arr.length; i++) {
+         					reviewText += "Review " + (i + 1) + ": " + arr[i] + "\n";
+         				}
+	    			}
+	    			
+	    			
+	    		} catch (Exception g) {
+	    			g.printStackTrace();
+	    		}
+	    		
+	    		JOptionPane.showMessageDialog(null, reviewText);
+	    	    
+	    	}
+	    });
+	    
+		JButton displayDesc = new JButton("Description");
+		
+		
+		// JTable
+		
+		
+		table.setRowHeight(30);
+		//table.setRowHeight(10, 50);
+		JScrollPane scrollpane = new JScrollPane(table);
+		scrollpane.setPreferredSize(new Dimension(600, 800));
+		
+		// Panel
+		searchPanel.setSize(1000, 1000);
+		searchPanel.add(scrollpane, BorderLayout.NORTH);
+		searchPanel.add(searching, BorderLayout.SOUTH);
+		searchPanel.add(searchB, BorderLayout.SOUTH);
+		//searchPanel.add(scrollPane, BorderLayout.SOUTH);
+		//searchPanel.add(scrollBar);
+		searchPanel.add(displayReview, BorderLayout.SOUTH);
+		searchPanel.add(displayDesc, BorderLayout.SOUTH);
 		
 		// Adding pages
 		cards.add(createAccPanel, "Create Account");
@@ -214,6 +282,8 @@ public class AppStackPanel extends JPanel {
 		this.add(cards);
 		 
 	}
+	
+	
 	
 	public boolean createAccount(String user, String pass) {
     	try {    		
