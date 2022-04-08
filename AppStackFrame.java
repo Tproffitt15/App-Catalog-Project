@@ -18,20 +18,19 @@ import javax.swing.*;
  */
 
 public class AppStackFrame extends JFrame {
-	
-	public static final int SCREEN_WIDTH = 1_000;
-    public static final int SCREEN_HEIGHT = 1_000;
 
-	public AppStackFrame() {
-		this.setTitle("AppStack");
-		this.add(new AppStackPanel());
-		this.setResizable(true);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new GridBagLayout());
-        this.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);		
-
+	public AppStackFrame() {        
+//		this.setTitle("AppStack");
+//		this.add(new AppStackPanel(600, 500));
+//		this.setResizable(false);
+//        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        this.setLayout(new GridBagLayout());
+//        this.setSize(600, 500);
+//        this.pack();
+//        this.setLocationRelativeTo(null);
+//        this.setVisible(true);		
+		CreateAccountPage createPage = new CreateAccountPage();
+		
+		
 	}
 }
