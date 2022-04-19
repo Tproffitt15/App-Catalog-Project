@@ -31,7 +31,7 @@ import javax.swing.table.TableRowSorter;
 
 public class CreateAccountPage extends JFrame {
 	public CreateAccountPage() {
-		JFrame frame = new JFrame("Login");
+		JFrame frame = new JFrame("Create Account");
 		
 		JPanel createAccPanel = new JPanel();
 		createAccPanel.setSize(600, 500);
