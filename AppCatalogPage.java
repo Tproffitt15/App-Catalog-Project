@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.swing.JButton;
@@ -38,18 +39,19 @@ public class AppCatalogPage extends JFrame {
 		JTable searchTable = new JTable();
 		
 		JButton searchB = new JButton("Search");
+		ArrayList<String> historyList = new ArrayList<String>();
+
 
 		InsertFileDataToJTable model = new InsertFileDataToJTable();
 		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
 		JTable table = new JTable(model);
 		table.setRowSorter(sorter);
 		table.getColumnModel().getColumn(0).setHeaderValue("App");
-		table.getColumnModel().getColumn(1).setHeaderValue("Desc");
-		table.getColumnModel().getColumn(2).setHeaderValue("Publisher");
-		table.getColumnModel().getColumn(3).setHeaderValue("Platform");
-		table.getColumnModel().getColumn(4).setHeaderValue("Version");
-		table.getColumnModel().getColumn(5).setHeaderValue("Link");
-		table.getColumnModel().getColumn(6).setHeaderValue("Price");
+		table.getColumnModel().getColumn(1).setHeaderValue("Publisher");
+		table.getColumnModel().getColumn(2).setHeaderValue("Platform");
+		table.getColumnModel().getColumn(3).setHeaderValue("Version");
+		table.getColumnModel().getColumn(4).setHeaderValue("Link");
+		table.getColumnModel().getColumn(5).setHeaderValue("Price");
 		
 
 		searchB.addActionListener(new ActionListener() {
@@ -58,6 +60,7 @@ public class AppCatalogPage extends JFrame {
             	 try {	
             		 
             		String searchMade = searching.getText().trim();
+            		historyList.add(searchMade);
             		
             		if (searchMade.length() != 0) {
             			searchMade = searchMade.substring(0, 1).toUpperCase() + searchMade.substring(1);
@@ -82,8 +85,132 @@ public class AppCatalogPage extends JFrame {
              }
          });
 		
+		
+		JButton searchHistoryB = new JButton("Search History");
+		searchHistoryB.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+           	 try {	
+           		SearchHistory searches = new SearchHistory(historyList);
+        		
+        		
+        		} catch (Exception f) {
+        			f.printStackTrace();
+        		}
+            }
+        });
+
+		
 		int[] rowIndex = table.getSelectedRows();
 		int[] colIndex = table.getSelectedColumns();
+		
+		// Filter function
+		JButton filterCrossBtn = new JButton("Cross-platform Apps Only");
+		filterCrossBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {	
+           		 
+            		String platform = "cross-platform";
+            			
+            		RowFilter<TableModel, Object> rf = null;
+            	    //If current expression doesn't parse, don't update.
+            	    try {
+            	        rf = RowFilter.regexFilter(platform, 0);
+            	    } catch (java.util.regex.PatternSyntaxException f) {
+            	    	
+            	        return;
+            	    }
+            	    sorter.setRowFilter(rf);
+     	            sorter.setRowFilter(RowFilter.regexFilter(platform));
+
+            		
+         		} catch (Exception f) {
+         			f.printStackTrace();
+         		}
+			}
+		});
+		
+		JButton filterMobileBtn = new JButton("Mobile Apps Only");
+		filterMobileBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {	
+           		 
+            		String platform = "mobile";
+            			
+            		RowFilter<TableModel, Object> rf = null;
+            	    //If current expression doesn't parse, don't update.
+            	    try {
+            	        rf = RowFilter.regexFilter(platform, 0);
+            	    } catch (java.util.regex.PatternSyntaxException f) {
+            	    	
+            	        return;
+            	    }
+            	    sorter.setRowFilter(rf);
+     	            sorter.setRowFilter(RowFilter.regexFilter(platform));
+
+            		
+         		} catch (Exception f) {
+         			f.printStackTrace();
+         		}
+			}
+		});
+		
+		
+		JButton filterFree= new JButton("Free Apps Only");
+		filterFree.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {	
+           		 
+            		String price = "0.0";
+            			
+            		RowFilter<TableModel, Object> rf = null;
+            	    //If current expression doesn't parse, don't update.
+            	    try {
+            	        rf = RowFilter.regexFilter(price, 0);
+            	    } catch (java.util.regex.PatternSyntaxException f) {
+            	    	
+            	        return;
+            	    }
+            	    sorter.setRowFilter(rf);
+     	            sorter.setRowFilter(RowFilter.regexFilter(price));
+
+            		
+         		} catch (Exception f) {
+         			f.printStackTrace();
+         		}
+			}
+		});
+		
+		JButton filterClear = new JButton("Clear Filters");
+		filterClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {	
+           		 
+            		String platform = "";
+            			
+            		RowFilter<TableModel, Object> rf = null;
+            	    //If current expression doesn't parse, don't update.
+            	    try {
+            	        rf = RowFilter.regexFilter(platform, 0);
+            	    } catch (java.util.regex.PatternSyntaxException f) {
+            	    	
+            	        return;
+            	    }
+            	    sorter.setRowFilter(rf);
+     	            sorter.setRowFilter(RowFilter.regexFilter(platform));
+
+            		
+         		} catch (Exception f) {
+         			f.printStackTrace();
+         		}
+			}
+		});
+		
+		searchPanel.add(filterCrossBtn, BorderLayout.SOUTH);
+		searchPanel.add(filterMobileBtn, BorderLayout.SOUTH);
+		searchPanel.add(filterFree, BorderLayout.SOUTH);
+		searchPanel.add(filterClear, BorderLayout.SOUTH);
+		
 	
 		// Search box		
 		JPanel reviewPanel = new JPanel();
@@ -129,8 +256,9 @@ public class AppCatalogPage extends JFrame {
 		
 		// Panel
 		searchPanel.setSize(600, 500);
-		searchPanel.add(scrollpane, BorderLayout.NORTH);
+		searchPanel.add(scrollpane);
 		searchPanel.add(searching, BorderLayout.SOUTH);
+		searchPanel.add(searchHistoryB, BorderLayout.SOUTH);
 		searchPanel.add(searchB, BorderLayout.SOUTH);
 		//searchPanel.add(scrollPane, BorderLayout.SOUTH);
 		//searchPanel.add(scrollBar);
@@ -141,15 +269,20 @@ public class AppCatalogPage extends JFrame {
         frame.setSize(1000, 700);
         frame.setVisible(true);
 		
-        JButton snapchat = new JButton("Snapchat");
-        searchPanel.add(snapchat);
-        
-    	snapchat.addActionListener(new ActionListener() {
-      	  @Override
-      	  public void actionPerformed(ActionEvent e) {
-      		  AppPage app = new AppPage("Snapchat");
-      	  }
-      	});
+        JButton displayBtn = new JButton("Display");
+        searchPanel.add(displayBtn);
+        displayBtn.setMnemonic(KeyEvent.VK_C);
+	    displayBtn.addActionListener(new ActionListener() {
+	    	public void actionPerformed(java.awt.event.ActionEvent evt) {
+	    		int[] selectedRows= table.getSelectedRows();
+	    		//int[] selectedColumns = table.getSelectedColumns();
+	    		String reviewText = "";
+	    		String displayApp = (table.getValueAt(selectedRows[0], 0)) + "";
+	    		AppPage app = new AppPage(displayApp);
+	    	    
+	    	}
+	    });
+    	
 	}
 	
 }
