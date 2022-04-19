@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -11,6 +12,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import java.awt.desktop.*;
+import java.lang.Object;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -32,7 +36,7 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.text.DefaultCaret;
 
 public class AppPage extends JFrame {
-	public AppPage(String appName) {
+	public AppPage(String appName,String appLink) {
 		JFrame frame = new JFrame(appName);
 		JPanel panel = new JPanel();
 		frame.add(panel);
@@ -54,6 +58,8 @@ public class AppPage extends JFrame {
         panel.add(reviewBut);
         JButton addReviewBut = new JButton("Add Review");
         panel.add(addReviewBut);
+        JButton downloadBut = new JButton("Download");
+        panel.add(downloadBut);
         
         JTextArea area = new JTextArea(20, 55);
         //area.setBounds(5,5,100,200);
@@ -119,6 +125,18 @@ public class AppPage extends JFrame {
         	@Override
             public void actionPerformed(ActionEvent e) {
         		AppReviewPage reviewPage = new AppReviewPage(appName);
+        		
+            }        	
+        });
+        
+        downloadBut.addActionListener(new ActionListener() {
+        	@Override
+            public void actionPerformed(ActionEvent e) {
+        		try {
+        	        Desktop.getDesktop().browse(new URL(appLink).toURI());
+        	    } catch (Exception f) {
+        	        f.printStackTrace();
+        	    }
         		
             }        	
         });
