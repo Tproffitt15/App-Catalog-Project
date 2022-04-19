@@ -278,7 +278,8 @@ public class AppCatalogPage extends JFrame {
 	    		//int[] selectedColumns = table.getSelectedColumns();
 	    		String reviewText = "";
 	    		String displayApp = (table.getValueAt(selectedRows[0], 0)) + "";
-	    		AppPage app = new AppPage(displayApp);
+	    		String downloadLink = (table.getValueAt(selectedRows[0], 4)) + "";
+	    		AppPage app = new AppPage(displayApp,downloadLink);
 	    	    
 	    	}
 	    });
